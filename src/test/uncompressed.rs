@@ -82,6 +82,7 @@ fn uncompressed() {
                         handler: FourCC::new(b"vide"),
                         name: "GPAC ISO Video Handler".into(),
                     },
+                    elng: None,
                     minf: Minf {
                         vmhd: Some(Vmhd {
                             graphics_mode: 0,

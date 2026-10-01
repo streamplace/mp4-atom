@@ -98,6 +98,7 @@ fn avcc_ext() {
                         handler: b"vide".into(),
                         name: "L-SMASH Video Handler".to_string(),
                     },
+                    elng: None,
                     minf: Minf {
                         vmhd: Some(Vmhd {
                             graphics_mode: 0,
@@ -220,6 +221,7 @@ fn avcc_ext() {
                         handler: b"soun".into(),
                         name: "L-SMASH Audio Handler".into(),
                     },
+                    elng: None,
                     minf: Minf {
                         smhd: Some(Smhd::default()),
                         dinf: Dinf {

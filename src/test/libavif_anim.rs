@@ -199,6 +199,7 @@ fn av1_anim() {
                         handler: b"pict".into(),
                         name: "".into()
                     },
+                    elng: None,
                     minf: Minf {
                         vmhd: Some(Vmhd {
                             graphics_mode: 0,

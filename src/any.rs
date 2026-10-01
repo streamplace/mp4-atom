@@ -270,6 +270,7 @@ any! {
             Tkhd,
             Mdia,
                 Mdhd,
+                Elng,
                 Minf,
                     Stbl,
                         Stsd,
