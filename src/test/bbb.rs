@@ -63,6 +63,7 @@ fn bbb() {
                         handler: b"vide".into(),
                         name: "(C) 2007 Google Inc. v08.13.2007.".into(),
                     },
+                    elng: None,
                     minf: Minf {
                         vmhd: Vmhd {
                             ..Default::default()
@@ -146,6 +147,7 @@ fn bbb() {
                         handler: b"soun".into(),
                         name: "(C) 2007 Google Inc. v08.13.2007.".into(),
                     },
+                    elng: None,
                     minf: Minf {
                         smhd: Some(Smhd {
                             ..Default::default()

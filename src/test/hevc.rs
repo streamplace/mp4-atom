@@ -88,6 +88,7 @@ fn hevc() {
                         handler: b"vide".into(),
                         name: "VideoHandler".into()
                     },
+                    elng: None,
                     minf: Minf {
                         vmhd: Some(Vmhd {
                             graphics_mode: 0,

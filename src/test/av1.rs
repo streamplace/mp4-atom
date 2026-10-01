@@ -93,6 +93,7 @@ fn av1() {
                         handler: b"vide".into(),
                         name: "obu@GPAC2.1-DEV-rev199-g8e29f6e8b-github_master".into()
                     },
+                    elng: None,
                     minf: Minf {
                         vmhd: Some(Vmhd {
                             graphics_mode: 0,

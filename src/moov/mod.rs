@@ -175,6 +175,7 @@ mod test {
                             handler: b"vide".into(),
                             name: "VideoHandler".to_string(),
                         },
+                        elng: None,
                         minf: Minf {
                             vmhd: Some(Vmhd {
                                 graphics_mode: 0,
