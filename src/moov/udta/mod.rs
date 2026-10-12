@@ -1,10 +1,12 @@
 mod cprt;
 mod kind;
+mod name;
 mod rtng;
 mod skip;
 
 pub use cprt::*;
 pub use kind::*;
+pub use name::*;
 pub use rtng::*;
 pub use skip::*;
 
@@ -17,15 +19,62 @@ pub struct Udta {
     pub kind: Option<Kind>,
     pub meta: Option<Meta>,
     pub rtng: Option<Rtng>,
+    pub name: Option<TrackName>,
 }
 
 impl Atom for Udta {
     const KIND: FourCC = FourCC::new(b"udta");
 
-    nested! {
-        required: [ ],
-        optional: [ Cprt, Meta, Kind, Rtng ],
-        multiple: [ ],
+    fn decode_body<B: Buf>(buf: &mut B) -> Result<Self> {
+        let mut udta = Self::default();
+        // `name` has a different payload here than the null-terminated
+        // ilst/name registered in Any, so dispatch that one contextually.
+        while let Some(header) = Header::decode_maybe(buf)? {
+            if header.kind == TrackName::KIND {
+                if udta
+                    .name
+                    .replace(TrackName::decode_atom(&header, buf)?)
+                    .is_some()
+                {
+                    return Err(Error::DuplicateBox(TrackName::KIND));
+                }
+                continue;
+            }
+            match Any::decode_atom(&header, buf)? {
+                Any::Cprt(atom) => {
+                    if udta.cprt.replace(atom).is_some() {
+                        return Err(Error::DuplicateBox(Cprt::KIND));
+                    }
+                }
+                Any::Meta(atom) => {
+                    if udta.meta.replace(atom).is_some() {
+                        return Err(Error::DuplicateBox(Meta::KIND));
+                    }
+                }
+                Any::Kind(atom) => {
+                    if udta.kind.replace(atom).is_some() {
+                        return Err(Error::DuplicateBox(Kind::KIND));
+                    }
+                }
+                Any::Rtng(atom) => {
+                    if udta.rtng.replace(atom).is_some() {
+                        return Err(Error::DuplicateBox(Rtng::KIND));
+                    }
+                }
+                Any::Skip(atom) => tracing::debug!(size = atom.zeroed.size, "skipping skip box"),
+                Any::Free(atom) => tracing::debug!(size = atom.zeroed.size, "skipping free box"),
+                unknown => Self::decode_unknown(&unknown)?,
+            }
+        }
+        Ok(udta)
+    }
+
+    fn encode_body<B: BufMut>(&self, buf: &mut B) -> Result<()> {
+        self.cprt.encode(buf)?;
+        self.meta.encode(buf)?;
+        self.kind.encode(buf)?;
+        self.rtng.encode(buf)?;
+        self.name.encode(buf)
     }
 }
 
@@ -40,6 +89,7 @@ mod tests {
             meta: None,
             kind: None,
             rtng: None,
+            name: None,
         };
 
         let mut buf = Vec::new();
@@ -73,6 +123,9 @@ mod tests {
                 criteria: b"PG13".into(),
                 language: "eng".into(),
                 rating_info: "test info".into(),
+            }),
+            name: Some(TrackName {
+                value: b"Music".to_vec(),
             }),
         };
 
