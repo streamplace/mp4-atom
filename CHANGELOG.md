@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Support ffmpeg's raw UTF-8 `trak/udta/name` track titles with `Udta.name`
+  and `TrackName`, preserving the payload without adding a terminator.
+
 ## [0.10.1](https://github.com/kixelated/mp4-atom/compare/v0.10.0...v0.10.1) - 2026-01-23
 
 ### Other
